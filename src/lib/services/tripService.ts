@@ -3,6 +3,12 @@ import { SearchRequest } from '@/lib/validations/api';
 
 const prisma = new PrismaClient();
 
+// Export individual functions for easier importing
+export const getTripById = TripService.getTripById.bind(TripService);
+export const searchTrips = TripService.searchTrips.bind(TripService);
+export const getFeaturedTrips = TripService.getFeaturedTrips.bind(TripService);
+export const getFilterOptions = TripService.getFilterOptions.bind(TripService);
+
 export interface SearchOptions {
   page?: number;
   limit?: number;
@@ -261,6 +267,36 @@ export class TripService {
     });
 
     return trips.map(this.formatTripResult);
+  }
+
+  static async getTripById(id: string): Promise<TripSearchResult | null> {
+    try {
+      const trip = await prisma.trip.findUnique({
+        where: { id },
+        include: {
+          reviews: {
+            select: {
+              rating: true
+            }
+          },
+          _count: {
+            select: {
+              reviews: true,
+              bookings: true
+            }
+          }
+        }
+      });
+
+      if (!trip) {
+        return null;
+      }
+
+      return this.formatTripResult(trip);
+    } catch (error) {
+      console.error('Error fetching trip by ID:', error);
+      return null;
+    }
   }
 
   static async getFilterOptions() {
