@@ -107,11 +107,14 @@
     - Include real-time filter application
     - _Requirements: 3.1, 3.2, 5.1, 5.2_
 
-- [-] 5. Implement search and filtering functionality
+- [x] 5. Implement search and filtering functionality
 
 
 
-  - [-] 5.1 Create search API endpoint
+
+
+  - [x] 5.1 Create search API endpoint
+
 
     - Implement Next.js API route for trip search
     - Add Prisma queries with location and date filtering
@@ -119,7 +122,9 @@
     - Validate requests using Zod schemas
     - _Requirements: 1.1, 1.4, 3.3, 3.4_
   
-  - [ ] 5.2 Build trip listing page with filters
+  - [x] 5.2 Build trip listing page with filters
+
+
     - Create trip grid component with responsive layout
     - Implement client-side filtering and sorting
     - Add loading states and empty state handling
