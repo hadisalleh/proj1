@@ -12,20 +12,33 @@
   - Configure ESLint and Prettier for code quality
   - _Requirements: All requirements depend on proper project setup_
 
-- [ ] 2. Configure database and ORM setup
-  - [ ] 2.1 Set up Prisma ORM with PostgreSQL
+- [x] 2. Configure database and ORM setup
+
+
+
+
+
+  - [x] 2.1 Set up Prisma ORM with PostgreSQL
+
+
     - Install Prisma CLI and client packages
     - Configure database connection and environment variables
     - Create initial Prisma schema file
     - _Requirements: 1.1, 2.1, 4.1, 6.1_
   
-  - [ ] 2.2 Define complete database schema
+
+
+  - [x] 2.2 Define complete database schema
+
     - Implement Trip, User, Booking, and Review models in Prisma schema
     - Set up proper relationships and constraints
     - Configure enum types for booking status
+
     - _Requirements: 1.1, 2.1, 4.1, 6.1_
   
-  - [ ] 2.3 Generate Prisma client and run initial migration
+  - [x] 2.3 Generate Prisma client and run initial migration
+
+
     - Generate Prisma client for type-safe database operations
     - Create and run database migrations
     - Seed database with sample fishing trip data

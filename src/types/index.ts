@@ -1,4 +1,8 @@
 // Core data types for the fishing trip application
+import { Trip as PrismaTrip, User as PrismaUser, Booking as PrismaBooking, Review as PrismaReview, BookingStatus as PrismaBookingStatus } from '@prisma/client'
+
+// Export Prisma types for database operations
+export type { PrismaTrip, PrismaUser, PrismaBooking, PrismaReview, PrismaBookingStatus }
 
 export interface Trip {
   id: string;
