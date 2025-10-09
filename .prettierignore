@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+dist
+build
+.git
+.kiro
+*.log
+package-lock.json
+yarn.lock
