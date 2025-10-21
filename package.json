@@ -20,7 +20,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset",
     "perf:lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
-    "perf:bundle": "npm run build:analyze"
+    "perf:bundle": "npm run build:analyze",
+    "setup": "node scripts/setup.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
