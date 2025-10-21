@@ -26,6 +26,24 @@ export const ReviewFormSchema = z.object({
   images: z.array(z.instanceof(File)).max(5, "Maximum 5 images allowed").optional(),
 });
 
+// Review submission validation schema (includes trip date)
+export const ReviewSubmissionSchema = z.object({
+  rating: z.coerce.number().min(1, "Please select a rating").max(5, "Rating cannot exceed 5 stars"),
+  comment: z.string().min(1, "Please share your experience").max(1000, "Review must be less than 1000 characters"),
+  tripDate: z.string().min(1, "Trip date is required").refine(
+    (date) => {
+      const tripDate = new Date(date);
+      const today = new Date();
+      today.setHours(23, 59, 59, 999); // End of today
+      return tripDate <= today;
+    },
+    {
+      message: "Trip date cannot be in the future",
+    }
+  ),
+  images: z.array(z.instanceof(File)).max(5, "Maximum 5 images allowed").optional(),
+});
+
 // Filter form validation schema
 export const FilterFormSchema = z.object({
   priceMin: z.coerce.number().min(0, "Minimum price cannot be negative").optional(),
@@ -76,6 +94,7 @@ export const NewsletterSignupSchema = z.object({
 export type SearchFormData = z.infer<typeof SearchFormSchema>;
 export type BookingFormData = z.infer<typeof BookingFormSchema>;
 export type ReviewFormData = z.infer<typeof ReviewFormSchema>;
+export type ReviewSubmissionData = z.infer<typeof ReviewSubmissionSchema>;
 export type FilterFormData = z.infer<typeof FilterFormSchema>;
 export type ContactFormData = z.infer<typeof ContactFormSchema>;
 export type NewsletterSignupData = z.infer<typeof NewsletterSignupSchema>;

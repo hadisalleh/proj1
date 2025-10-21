@@ -140,7 +140,7 @@
 - [x] 6. Develop trip details and booking system
 
 
-
+ 
 
 
   - [x] 6.1 Create trip detail page
@@ -176,42 +176,79 @@
     - Test booking status updates and data persistence
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 7. Implement review and rating system
-  - [ ] 7.1 Create review display components
+- [x] 7. Implement review and rating system
+
+
+
+
+
+  - [x] 7.1 Create review display components
+
+
     - Build review card component with rating stars
     - Implement review list with pagination
     - Add review filtering and sorting options
     - Include reviewer information and trip date display
     - _Requirements: 6.1, 6.2, 6.3, 6.4_
   
-  - [ ] 7.2 Build review submission form
+  - [x] 7.2 Build review submission form
+
+
     - Create review form with rating selection and comment input
     - Add image upload functionality for review photos
     - Implement form validation using Zod schemas
     - Include review submission confirmation
     - _Requirements: 6.2, 6.3_
   
-  - [ ] 7.3 Implement review API endpoints
+  - [x] 7.3 Implement review API endpoints
+
+
+
     - Create API routes for review creation and retrieval
     - Add review moderation and spam detection logic
     - Implement review aggregation for trip ratings
     - Validate review data using Zod schemas
     - _Requirements: 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 8. Add authentication and user management
-  - [ ] 8.1 Set up NextAuth.js configuration
+- [x] 8. Add authentication and user management
+
+
+
+
+
+
+  - [x] 8.1 Set up NextAuth.js configuration
+
+
     - Configure authentication providers (email, Google, etc.)
     - Set up session management and JWT configuration
     - Create user registration and login flows
     - _Requirements: 4.3, 4.4_
   
-  - [ ] 8.2 Implement user profile and booking history
+  - [x] 8.2 Implement user profile and booking history
+
+
+
+
+
+
+
+
+
+
     - Create user profile page with booking history
     - Add booking management functionality (view, modify, cancel)
     - Implement user review history and management
     - _Requirements: 4.4_
   
-  - [ ]* 8.3 Write tests for authentication flows
+  - [x] 8.3 Write tests for authentication flows
+
+
+
+
+
+
+
     - Test user registration and login processes
     - Validate session management and security
     - Test protected route access and authorization

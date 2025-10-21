@@ -2,17 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, User, LogIn } from 'lucide-react';
+import { Menu, X, User, LogIn, LogOut } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
 
-interface HeaderProps {
-  isAuthenticated?: boolean;
-  user?: {
-    name: string;
-    email: string;
-  };
-}
-
-export default function Header({ isAuthenticated = false, user }: HeaderProps) {
+export default function Header() {
+  const { data: session, status } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -54,27 +48,35 @@ export default function Header({ isAuthenticated = false, user }: HeaderProps) {
 
           {/* Desktop Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
-            {isAuthenticated && user ? (
+            {status === "loading" ? (
+              <div className="animate-pulse">
+                <div className="h-8 w-20 bg-gray-200 rounded"></div>
+              </div>
+            ) : session?.user ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
                   <User className="h-5 w-5 text-gray-600" />
-                  <span className="text-sm text-gray-700">{user.name}</span>
+                  <span className="text-sm text-gray-700">{session.user.name || session.user.email}</span>
                 </div>
-                <button className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                  Logout
+                <button 
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
                 </button>
               </div>
             ) : (
               <div className="flex items-center space-x-3">
                 <Link
-                  href="/login"
+                  href="/auth/signin"
                   className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   <LogIn className="h-4 w-4" />
                   <span className="text-sm font-medium">Sign In</span>
                 </Link>
                 <Link
-                  href="/register"
+                  href="/auth/signup"
                   className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
                 >
                   Sign Up
@@ -116,22 +118,33 @@ export default function Header({ isAuthenticated = false, user }: HeaderProps) {
               
               {/* Mobile Auth Section */}
               <div className="border-t border-gray-200 pt-4 mt-4">
-                {isAuthenticated && user ? (
+                {status === "loading" ? (
+                  <div className="animate-pulse px-3 py-2">
+                    <div className="h-6 w-24 bg-gray-200 rounded"></div>
+                  </div>
+                ) : session?.user ? (
                   <div className="space-y-2">
                     <div className="flex items-center px-3 py-2">
                       <User className="h-5 w-5 text-gray-600 mr-2" />
                       <span className="text-base font-medium text-gray-700">
-                        {user.name}
+                        {session.user.name || session.user.email}
                       </span>
                     </div>
-                    <button className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    <button 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        signOut({ callbackUrl: "/" });
+                      }}
+                      className="flex items-center w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
                       Logout
                     </button>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <Link
-                      href="/login"
+                      href="/auth/signin"
                       className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
@@ -139,7 +152,7 @@ export default function Header({ isAuthenticated = false, user }: HeaderProps) {
                       Sign In
                     </Link>
                     <Link
-                      href="/register"
+                      href="/auth/signup"
                       className="block px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors text-center"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
