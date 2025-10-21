@@ -141,32 +141,23 @@ export function useWebVitals() {
       }
     };
 
-    // Import and use web-vitals library if available
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(reportWebVital);
-      getFID(reportWebVital);
-      getFCP(reportWebVital);
-      getLCP(reportWebVital);
-      getTTFB(reportWebVital);
-    }).catch(() => {
-      // web-vitals not available, use basic performance API
-      if ('PerformanceObserver' in window) {
-        try {
-          const observer = new PerformanceObserver((list) => {
-            for (const entry of list.getEntries()) {
-              reportWebVital({
-                name: entry.entryType,
-                value: entry.startTime,
-                id: Math.random().toString(36).substr(2, 9)
-              });
-            }
-          });
-          
-          observer.observe({ entryTypes: ['paint', 'largest-contentful-paint'] });
-        } catch (e) {
-          console.warn('Performance observer not supported');
-        }
+    // Use basic performance API
+    if ('PerformanceObserver' in window) {
+      try {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            reportWebVital({
+              name: entry.entryType,
+              value: entry.startTime,
+              id: Math.random().toString(36).substr(2, 9)
+            });
+          }
+        });
+        
+        observer.observe({ entryTypes: ['paint', 'largest-contentful-paint'] });
+      } catch (e) {
+        console.warn('Performance observer not supported');
       }
-    });
+    }
   }, []);
 }

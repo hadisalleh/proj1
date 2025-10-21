@@ -32,16 +32,16 @@ model Trip {
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
-  emailVerified DateTime?
   name          String?
   phone         String?
-  image         String?
-  password      String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  accounts      Account[]
   bookings      Booking[]
   reviews       Review[]
-  accounts      Account[]
   sessions      Session[]
 
   @@map("users")
@@ -82,28 +82,20 @@ model Review {
   @@map("reviews")
 }
 
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
-}
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -126,4 +118,11 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verificationtokens")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
 }

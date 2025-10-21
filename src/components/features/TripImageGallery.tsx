@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X, Grid3X3 } from 'lucide-react';
-import { useSwipeableElement } from '@/hooks/useSwipeGesture';
+// import { useSwipeableElement } from '@/hooks/useSwipeGesture';
 
 interface TripImageGalleryProps {
   images: string[];
@@ -40,19 +40,7 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
     setModalImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  // Swipe gestures for modal
-  const modalRef = useSwipeableElement({
-    onSwipeLeft: nextModalImage,
-    onSwipeRight: prevModalImage,
-    threshold: 50
-  });
-
-  // Swipe gestures for main gallery
-  const galleryRef = useSwipeableElement({
-    onSwipeLeft: nextImage,
-    onSwipeRight: prevImage,
-    threshold: 50
-  });
+  // Swipe gestures disabled temporarily
 
   if (!images || images.length === 0) {
     return (
@@ -65,7 +53,7 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
   return (
     <>
       {/* Main Gallery */}
-      <div ref={galleryRef} className="relative touch-manipulation">
+      <div className="relative touch-manipulation">
         {images.length === 1 ? (
           // Single image layout
           <div className="relative h-64 sm:h-80 md:h-[500px]">
@@ -169,7 +157,7 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <div ref={modalRef} className="relative w-full h-full flex items-center justify-center p-2 sm:p-4 touch-manipulation">
+          <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-4 touch-manipulation">
             {/* Close button */}
             <button
               onClick={closeModal}

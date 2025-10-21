@@ -21,17 +21,21 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react'],
   },
 
-  // Bundle analyzer (only in development)
+  // Bundle analyzer (only when explicitly enabled and dependency is available)
   ...(process.env.ANALYZE === 'true' && {
     webpack: (config: any) => {
       if (process.env.NODE_ENV === 'development') {
-        const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-        config.plugins.push(
-          new BundleAnalyzerPlugin({
-            analyzerMode: 'server',
-            openAnalyzer: true,
-          })
-        );
+        try {
+          const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+          config.plugins.push(
+            new BundleAnalyzerPlugin({
+              analyzerMode: 'server',
+              openAnalyzer: true,
+            })
+          );
+        } catch (e) {
+          console.warn('webpack-bundle-analyzer not available');
+        }
       }
       return config;
     },

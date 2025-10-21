@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { hash } from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -99,6 +100,17 @@ async function main() {
     }
   })
 
+  // Create test user for login
+  const hashedPassword = await hash('P@ssword1234', 12)
+  const testUser = await prisma.user.create({
+    data: {
+      email: 'test@cubaje.my',
+      name: 'Test User',
+      phone: '+60-123-456789',
+      password: hashedPassword
+    }
+  })
+
   // Create sample bookings
   await prisma.booking.create({
     data: {
@@ -124,6 +136,19 @@ async function main() {
     }
   })
 
+  // Create booking for test user
+  await prisma.booking.create({
+    data: {
+      tripId: trip1.id,
+      userId: testUser.id,
+      startDate: new Date('2024-12-01T08:00:00Z'),
+      endDate: new Date('2024-12-01T16:00:00Z'),
+      guests: 3,
+      totalPrice: 899.97,
+      status: 'CONFIRMED'
+    }
+  })
+
   // Create sample reviews
   await prisma.review.create({
     data: {
@@ -144,6 +169,18 @@ async function main() {
       comment: 'Great deep sea fishing trip. The boat was comfortable and the crew was professional.',
       images: [],
       tripDate: new Date('2024-09-15T08:00:00Z')
+    }
+  })
+
+  // Create review for test user
+  await prisma.review.create({
+    data: {
+      tripId: trip2.id,
+      userId: testUser.id,
+      rating: 5,
+      comment: 'Perfect sunset fishing experience! The captain was friendly and we caught some beautiful fish. Will definitely book again!',
+      images: ['/images/test-review-1.jpg'],
+      tripDate: new Date('2024-10-15T16:00:00Z')
     }
   })
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, X, Filter } from 'lucide-react';
 import { SearchFilters } from '@/types';
-import { useSwipeableElement } from '@/hooks/useSwipeGesture';
+// import { useSwipeableElement } from '@/hooks/useSwipeGesture';
 
 interface FilterSidebarProps {
   filters: SearchFilters;
@@ -159,17 +159,8 @@ export default function FilterSidebar({
     return count;
   };
 
-  // Swipe gesture for closing mobile drawer
-  const sidebarRef = useSwipeableElement({
-    onSwipeLeft: () => {
-      if (onToggle && isOpen) {
-        onToggle();
-      }
-    }
-  });
-
   const sidebarContent = (
-    <div ref={sidebarRef} className="bg-white border-r border-gray-200 h-full">
+    <div className="bg-white border-r border-gray-200 h-full">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">

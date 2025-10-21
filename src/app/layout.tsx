@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout';
 import { SessionProvider } from '@/components/providers/SessionProvider';
-import PerformanceProvider from '@/components/providers/PerformanceProvider';
+// import PerformanceProvider from '@/components/providers/PerformanceProvider';
+// import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,6 +32,15 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'FishTrip',
   },
+  icons: {
+    icon: [
+      { url: '/icons/icon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icons/icon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/icon-192x192.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     type: 'website',
     siteName: 'FishTrip',
@@ -42,6 +52,14 @@ export const metadata: Metadata = {
     title: 'FishTrip - Find Your Perfect Fishing Adventure',
     description: 'Discover and book amazing fishing trips around the world. Compare prices, read reviews, and find the perfect fishing experience for you.',
   },
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'default',
+    'apple-mobile-web-app-title': 'FishTrip',
+    'mobile-web-app-capable': 'yes',
+    'msapplication-TileColor': '#2563eb',
+    'msapplication-tap-highlight': 'no',
+  },
 };
 
 export default function RootLayout({
@@ -51,43 +69,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="FishTrip" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content="#2563eb" />
-        <meta name="msapplication-tap-highlight" content="no" />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <PerformanceProvider>
-          <SessionProvider>
-            <Header />
-            {children}
-          </SessionProvider>
-        </PerformanceProvider>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
+        <SessionProvider>
+          <Header />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

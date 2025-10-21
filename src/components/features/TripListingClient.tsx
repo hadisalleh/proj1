@@ -2,18 +2,18 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Filter, Grid, List, SlidersHorizontal } from 'lucide-react';
+import { Filter, Grid, List } from 'lucide-react';
 import FilterSidebar from './FilterSidebar';
 import TripGrid from './TripGrid';
 import TripListView from './TripListView';
 import SortDropdown from './SortDropdown';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import EmptyState from '@/components/ui/EmptyState';
-import PullToRefresh from '@/components/ui/PullToRefresh';
-import { SearchFilters, Trip } from '@/types';
+// import PullToRefresh from '@/components/ui/PullToRefresh';
+import { SearchFilters } from '@/types';
 import { TripSearchResult } from '@/lib/services/tripService';
-import { cachedFetch, cacheKeys } from '@/utils/cache';
-import { measureAsync } from '@/utils/performance';
+// import { cachedFetch, cacheKeys } from '@/utils/cache';
+// import { measureAsync } from '@/utils/performance';
 
 interface SearchResponse {
   success: boolean;
@@ -98,7 +98,7 @@ export default function TripListingClient() {
     return url.toString();
   }, [location, startDate, endDate, guests, filters, currentPage, sortBy, sortOrder]);
 
-  // Fetch trips from API with caching and performance monitoring
+  // Fetch trips from API
   const fetchTrips = useCallback(async (page: number = 1, append: boolean = false) => {
     try {
       if (!append) {
@@ -109,21 +109,13 @@ export default function TripListingClient() {
       setError(null);
 
       const url = buildSearchUrl({ page });
-      const cacheKey = cacheKeys.trips({ url, page });
+      const response = await fetch(url);
       
-      const data: SearchResponse = await measureAsync('fetch-trips', () =>
-        cachedFetch(
-          cacheKey,
-          async () => {
-            const response = await fetch(url);
-            if (!response.ok) {
-              throw new Error('Failed to fetch trips');
-            }
-            return response.json();
-          },
-          2 * 60 * 1000 // Cache for 2 minutes
-        )
-      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch trips');
+      }
+
+      const data: SearchResponse = await response.json();
       
       if (data.success) {
         if (append) {
@@ -314,51 +306,45 @@ export default function TripListingClient() {
         </div>
 
         {/* Trip Results */}
-        <PullToRefresh
-          onRefresh={() => fetchTrips(1, false)}
-          className="flex-1"
-          enabled={trips.length > 0}
-        >
-          <div className="p-4 lg:p-6">
-            {trips.length === 0 ? (
-              <EmptyState
-                title="No trips found"
-                description="Try adjusting your search criteria or filters to find more trips."
-                action={{
-                  label: 'Clear filters',
-                  onClick: () => handleFiltersChange({})
-                }}
-              />
-            ) : (
-              <>
-                {viewMode === 'grid' ? (
-                  <TripGrid trips={trips} />
-                ) : (
-                  <TripListView trips={trips} />
-                )}
+        <div className="flex-1 p-4 lg:p-6">
+          {trips.length === 0 ? (
+            <EmptyState
+              title="No trips found"
+              description="Try adjusting your search criteria or filters to find more trips."
+              action={{
+                label: 'Clear filters',
+                onClick: () => handleFiltersChange({})
+              }}
+            />
+          ) : (
+            <>
+              {viewMode === 'grid' ? (
+                <TripGrid trips={trips} />
+              ) : (
+                <TripListView trips={trips} />
+              )}
 
-                {/* Loading more indicator */}
-                {loadingMore && (
-                  <div className="flex justify-center py-8">
-                    <LoadingSpinner />
-                  </div>
-                )}
+              {/* Loading more indicator */}
+              {loadingMore && (
+                <div className="flex justify-center py-8">
+                  <LoadingSpinner />
+                </div>
+              )}
 
-                {/* Load more button (fallback for infinite scroll) */}
-                {currentPage < totalPages && !loadingMore && (
-                  <div className="flex justify-center py-8">
-                    <button
-                      onClick={loadMoreTrips}
-                      className="px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors touch-manipulation"
-                    >
-                      Load More Trips
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </PullToRefresh>
+              {/* Load more button (fallback for infinite scroll) */}
+              {currentPage < totalPages && !loadingMore && (
+                <div className="flex justify-center py-8">
+                  <button
+                    onClick={loadMoreTrips}
+                    className="px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors touch-manipulation"
+                  >
+                    Load More Trips
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

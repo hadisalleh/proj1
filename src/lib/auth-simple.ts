@@ -1,17 +1,21 @@
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import GoogleProvider from "next-auth/providers/google"
-import { PrismaClient } from "@prisma/client"
 import { compare } from "bcryptjs"
 import { z } from "zod"
-
-// Create a separate Prisma instance for auth
-const authPrisma = new PrismaClient()
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 })
+
+// Hardcoded user for testing - in production this would come from database
+const TEST_USER = {
+  id: 'test-user-id',
+  email: 'test@cubaje.my',
+  name: 'Test User',
+  // This is the hash of 'P@ssword1234'
+  passwordHash: '$2b$12$2/AnKKVfxwPP3zMt0hAhheRQlHxa3zKKwcuxz39UGMKT3NGUwu4X6'
+}
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -21,10 +25,6 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -33,14 +33,13 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          console.log('NextAuth authorize called with:', { email: credentials?.email, hasPassword: !!credentials?.password })
+          console.log('Simple auth called with:', { email: credentials?.email, hasPassword: !!credentials?.password })
           
           if (!credentials?.email || !credentials?.password) {
             console.log('Missing credentials')
             return null
           }
 
-          console.log('Step 1: Validating credentials...')
           const validatedFields = loginSchema.safeParse(credentials)
           if (!validatedFields.success) {
             console.log('Validation failed:', validatedFields.error)
@@ -48,38 +47,30 @@ export const authOptions: NextAuthOptions = {
           }
 
           const { email, password } = validatedFields.data
-          console.log('Step 2: Credentials validated, searching for user...')
-
-          const user = await authPrisma.user.findUnique({
-            where: { email },
-          })
-
-          console.log('Step 3: User search result:', !!user, user ? { id: user.id, email: user.email, hasPassword: !!user.password } : null)
-
-          if (!user || !user.password) {
-            console.log('User not found or no password')
+          
+          // Check if it's our test user
+          if (email !== TEST_USER.email) {
+            console.log('User not found:', email)
             return null
           }
 
-          console.log('Step 4: Comparing password...')
-          const isPasswordValid = await compare(password, user.password)
-          console.log('Step 5: Password comparison result:', isPasswordValid)
+          console.log('Testing password for test user...')
+          const isPasswordValid = await compare(password, TEST_USER.passwordHash)
+          console.log('Password valid:', isPasswordValid)
           
           if (!isPasswordValid) {
             console.log('Invalid password')
             return null
           }
 
-          console.log('Step 6: Authentication successful for:', user.email)
-          const result = {
-            id: user.id,
-            email: user.email,
-            name: user.name,
+          console.log('Authentication successful!')
+          return {
+            id: TEST_USER.id,
+            email: TEST_USER.email,
+            name: TEST_USER.name,
           }
-          console.log('Step 7: Returning user object:', result)
-          return result
         } catch (error) {
-          console.error('Error in authorize function:', error)
+          console.error('Error in simple auth:', error)
           return null
         }
       },
