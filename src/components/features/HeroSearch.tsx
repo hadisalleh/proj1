@@ -109,20 +109,20 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-blue-800 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gradient-to-r from-blue-600 to-blue-800 py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
             Find Your Perfect Fishing Adventure
           </h1>
-          <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto px-4">
             Discover amazing fishing trips around the world. Compare prices, read reviews, and book your next adventure.
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl p-4 sm:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {/* Location Input */}
               <div className="relative">
                 <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
@@ -138,7 +138,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                     onBlur={() => setTimeout(() => setShowLocationSuggestions(false), 200)}
                     onFocus={() => formData.location && setShowLocationSuggestions(true)}
                     placeholder="Where do you want to fish?"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 sm:py-4 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
                     required
                   />
                 </div>
@@ -151,7 +151,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                         key={index}
                         type="button"
                         onClick={() => selectLocation(location)}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                        className="w-full text-left px-4 py-3 text-base hover:bg-gray-100 focus:bg-gray-100 focus:outline-none touch-manipulation"
                       >
                         {location}
                       </button>
@@ -173,7 +173,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                     value={formData.startDate}
                     onChange={(e) => handleStartDateChange(e.target.value)}
                     min={today}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 sm:py-4 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
                     required
                   />
                 </div>
@@ -192,7 +192,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                     value={formData.endDate}
                     onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
                     min={formData.startDate || today}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 sm:py-4 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
                   />
                 </div>
               </div>
@@ -208,7 +208,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                     <button
                       type="button"
                       onClick={() => handleGuestChange(false)}
-                      className="absolute left-10 top-2 z-10 w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-sm font-medium"
+                      className="absolute left-10 top-2 sm:top-2.5 z-10 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-base font-medium touch-manipulation"
                       disabled={formData.guests <= 1}
                     >
                       -
@@ -218,12 +218,12 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                       id="guests"
                       value={formData.guests}
                       readOnly
-                      className="w-full pl-20 pr-12 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center"
+                      className="w-full pl-20 pr-14 py-3 sm:py-4 text-base border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center touch-manipulation"
                     />
                     <button
                       type="button"
                       onClick={() => handleGuestChange(true)}
-                      className="absolute right-3 top-2 z-10 w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-sm font-medium"
+                      className="absolute right-3 top-2 sm:top-2.5 z-10 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-base font-medium touch-manipulation"
                       disabled={formData.guests >= 20}
                     >
                       +
@@ -237,7 +237,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-md transition-colors duration-200 flex items-center space-x-2"
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-md transition-colors duration-200 flex items-center justify-center space-x-2 text-base touch-manipulation"
               >
                 <Search className="h-5 w-5" />
                 <span>Search Fishing Trips</span>

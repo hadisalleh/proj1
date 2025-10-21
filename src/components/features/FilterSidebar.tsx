@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, X, Filter } from 'lucide-react';
 import { SearchFilters } from '@/types';
+import { useSwipeableElement } from '@/hooks/useSwipeGesture';
 
 interface FilterSidebarProps {
   filters: SearchFilters;
@@ -158,8 +159,17 @@ export default function FilterSidebar({
     return count;
   };
 
+  // Swipe gesture for closing mobile drawer
+  const sidebarRef = useSwipeableElement({
+    onSwipeLeft: () => {
+      if (onToggle && isOpen) {
+        onToggle();
+      }
+    }
+  });
+
   const sidebarContent = (
-    <div className="bg-white border-r border-gray-200 h-full">
+    <div ref={sidebarRef} className="bg-white border-r border-gray-200 h-full">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -200,13 +210,13 @@ export default function FilterSidebar({
           <div>
             <button
               onClick={() => toggleSection('price')}
-              className="flex items-center justify-between w-full text-left"
+              className="flex items-center justify-between w-full text-left py-2 touch-manipulation"
             >
-              <h3 className="text-sm font-medium text-gray-900">Price Range</h3>
+              <h3 className="text-base font-medium text-gray-900">Price Range</h3>
               {sections.find(s => s.id === 'price')?.isOpen ? (
-                <ChevronUp className="h-4 w-4 text-gray-500" />
+                <ChevronUp className="h-5 w-5 text-gray-500" />
               ) : (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-5 w-5 text-gray-500" />
               )}
             </button>
             
@@ -219,7 +229,7 @@ export default function FilterSidebar({
                       type="number"
                       value={priceRange[0]}
                       onChange={(e) => handlePriceRangeChange(0, parseInt(e.target.value) || 0)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-base border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
                       min="0"
                       max="10000"
                     />
@@ -230,7 +240,7 @@ export default function FilterSidebar({
                       type="number"
                       value={priceRange[1]}
                       onChange={(e) => handlePriceRangeChange(1, parseInt(e.target.value) || 0)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 text-base border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 touch-manipulation"
                       min="0"
                       max="10000"
                     />
@@ -269,27 +279,27 @@ export default function FilterSidebar({
           <div>
             <button
               onClick={() => toggleSection('boatType')}
-              className="flex items-center justify-between w-full text-left"
+              className="flex items-center justify-between w-full text-left py-2 touch-manipulation"
             >
-              <h3 className="text-sm font-medium text-gray-900">Boat Type</h3>
+              <h3 className="text-base font-medium text-gray-900">Boat Type</h3>
               {sections.find(s => s.id === 'boatType')?.isOpen ? (
-                <ChevronUp className="h-4 w-4 text-gray-500" />
+                <ChevronUp className="h-5 w-5 text-gray-500" />
               ) : (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-5 w-5 text-gray-500" />
               )}
             </button>
             
             {sections.find(s => s.id === 'boatType')?.isOpen && (
               <div className="mt-3 space-y-2">
                 {boatTypes.map((boatType) => (
-                  <label key={boatType} className="flex items-center">
+                  <label key={boatType} className="flex items-center py-1 touch-manipulation">
                     <input
                       type="checkbox"
                       checked={filters.boatType?.includes(boatType) || false}
                       onChange={(e) => handleBoatTypeChange(boatType, e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 touch-manipulation"
                     />
-                    <span className="ml-2 text-sm text-gray-700">{boatType}</span>
+                    <span className="ml-3 text-base text-gray-700">{boatType}</span>
                   </label>
                 ))}
               </div>
@@ -302,27 +312,27 @@ export default function FilterSidebar({
           <div>
             <button
               onClick={() => toggleSection('fishingType')}
-              className="flex items-center justify-between w-full text-left"
+              className="flex items-center justify-between w-full text-left py-2 touch-manipulation"
             >
-              <h3 className="text-sm font-medium text-gray-900">Fishing Type</h3>
+              <h3 className="text-base font-medium text-gray-900">Fishing Type</h3>
               {sections.find(s => s.id === 'fishingType')?.isOpen ? (
-                <ChevronUp className="h-4 w-4 text-gray-500" />
+                <ChevronUp className="h-5 w-5 text-gray-500" />
               ) : (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-5 w-5 text-gray-500" />
               )}
             </button>
             
             {sections.find(s => s.id === 'fishingType')?.isOpen && (
               <div className="mt-3 space-y-2">
                 {fishingTypes.map((fishingType) => (
-                  <label key={fishingType} className="flex items-center">
+                  <label key={fishingType} className="flex items-center py-1 touch-manipulation">
                     <input
                       type="checkbox"
                       checked={filters.fishingType?.includes(fishingType) || false}
                       onChange={(e) => handleFishingTypeChange(fishingType, e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 touch-manipulation"
                     />
-                    <span className="ml-2 text-sm text-gray-700">{fishingType}</span>
+                    <span className="ml-3 text-base text-gray-700">{fishingType}</span>
                   </label>
                 ))}
               </div>
@@ -335,29 +345,29 @@ export default function FilterSidebar({
           <div>
             <button
               onClick={() => toggleSection('duration')}
-              className="flex items-center justify-between w-full text-left"
+              className="flex items-center justify-between w-full text-left py-2 touch-manipulation"
             >
-              <h3 className="text-sm font-medium text-gray-900">Trip Duration</h3>
+              <h3 className="text-base font-medium text-gray-900">Trip Duration</h3>
               {sections.find(s => s.id === 'duration')?.isOpen ? (
-                <ChevronUp className="h-4 w-4 text-gray-500" />
+                <ChevronUp className="h-5 w-5 text-gray-500" />
               ) : (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-5 w-5 text-gray-500" />
               )}
             </button>
             
             {sections.find(s => s.id === 'duration')?.isOpen && (
               <div className="mt-3 space-y-2">
                 {durationOptions.map((option, index) => (
-                  <label key={index} className="flex items-center">
+                  <label key={index} className="flex items-center py-1 touch-manipulation">
                     <input
                       type="checkbox"
                       checked={
                         filters.duration?.some(d => option.value.includes(d)) || false
                       }
                       onChange={(e) => handleDurationChange(option.value, e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 touch-manipulation"
                     />
-                    <span className="ml-2 text-sm text-gray-700">{option.label}</span>
+                    <span className="ml-3 text-base text-gray-700">{option.label}</span>
                   </label>
                 ))}
               </div>
@@ -382,7 +392,7 @@ export default function FilterSidebar({
         
         {/* Mobile drawer */}
         <div
-          className={`fixed left-0 top-0 h-full w-80 z-50 transform transition-transform duration-300 md:relative md:transform-none md:w-full ${
+          className={`fixed left-0 top-0 h-full w-full max-w-sm z-50 transform transition-transform duration-300 md:relative md:transform-none md:w-full ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           } ${className}`}
         >

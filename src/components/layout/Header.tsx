@@ -23,11 +23,11 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16 sm:h-18">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-xl sm:text-2xl font-bold text-blue-600">
                 🎣 FishTrip
               </div>
             </Link>
@@ -89,8 +89,9 @@ export default function Header() {
           <div className="md:hidden">
             <button
               onClick={toggleMobileMenu}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600 transition-colors"
+              className="p-3 text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600 transition-colors rounded-lg hover:bg-gray-100 active:bg-gray-200 touch-manipulation"
               aria-label="Toggle mobile menu"
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -103,13 +104,13 @@ export default function Header() {
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="md:hidden border-t border-gray-200 bg-white shadow-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto">
               {navigationItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                  className="block px-4 py-4 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors active:bg-gray-100 touch-manipulation"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
@@ -119,14 +120,14 @@ export default function Header() {
               {/* Mobile Auth Section */}
               <div className="border-t border-gray-200 pt-4 mt-4">
                 {status === "loading" ? (
-                  <div className="animate-pulse px-3 py-2">
+                  <div className="animate-pulse px-4 py-4">
                     <div className="h-6 w-24 bg-gray-200 rounded"></div>
                   </div>
                 ) : session?.user ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center px-3 py-2">
-                      <User className="h-5 w-5 text-gray-600 mr-2" />
-                      <span className="text-base font-medium text-gray-700">
+                  <div className="space-y-3">
+                    <div className="flex items-center px-4 py-4 bg-gray-50 rounded-lg">
+                      <User className="h-6 w-6 text-gray-600 mr-3" />
+                      <span className="text-lg font-medium text-gray-700 truncate">
                         {session.user.name || session.user.email}
                       </span>
                     </div>
@@ -135,25 +136,25 @@ export default function Header() {
                         setIsMobileMenuOpen(false);
                         signOut({ callbackUrl: "/" });
                       }}
-                      className="flex items-center w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                      className="flex items-center w-full text-left px-4 py-4 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors active:bg-gray-100 touch-manipulation"
                     >
-                      <LogOut className="h-4 w-4 mr-2" />
+                      <LogOut className="h-5 w-5 mr-3" />
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Link
                       href="/auth/signin"
-                      className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors"
+                      className="flex items-center px-4 py-4 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors active:bg-gray-100 touch-manipulation"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      <LogIn className="h-4 w-4 mr-2" />
+                      <LogIn className="h-5 w-5 mr-3" />
                       Sign In
                     </Link>
                     <Link
                       href="/auth/signup"
-                      className="block px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors text-center"
+                      className="block px-4 py-4 text-lg font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors text-center active:bg-blue-800 touch-manipulation"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Sign Up

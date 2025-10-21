@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Heart, MapPin, Clock, Users } from 'lucide-react';
 import { Trip } from '@/types';
+import OptimizedImage from '@/components/ui/OptimizedImage';
 
 interface TripCardProps {
   trip: Trip;
@@ -72,29 +72,21 @@ export default function TripCard({ trip, onFavorite, isFavorited = false }: Trip
   };
 
   return (
-    <Link href={`/trips/${trip.id}`} className="block group">
-      <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+    <Link href={`/trips/${trip.id}`} className="block group touch-manipulation">
+      <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 overflow-hidden">
         {/* Image Container */}
         <div className="relative h-48 bg-gray-200">
           {!imageError && trip.images.length > 0 ? (
-            <>
-              <Image
-                src={trip.images[0]}
-                alt={trip.title}
-                fill
-                className={`object-cover transition-opacity duration-300 ${
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setImageError(true)}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-                  <div className="text-gray-400">Loading...</div>
-                </div>
-              )}
-            </>
+            <OptimizedImage
+              src={trip.images[0]}
+              alt={trip.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              quality={80}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+            />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
               <div className="text-white text-4xl">🎣</div>
@@ -104,11 +96,11 @@ export default function TripCard({ trip, onFavorite, isFavorited = false }: Trip
           {/* Favorite Button */}
           <button
             onClick={handleFavoriteClick}
-            className="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white transition-colors duration-200 group/heart"
+            className="absolute top-3 right-3 p-3 rounded-full bg-white/80 hover:bg-white transition-colors duration-200 group/heart touch-manipulation"
             aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
           >
             <Heart
-              className={`h-5 w-5 transition-colors duration-200 ${
+              className={`h-6 w-6 transition-colors duration-200 ${
                 isFavorited
                   ? 'fill-red-500 text-red-500'
                   : 'text-gray-600 group-hover/heart:text-red-500'
@@ -185,11 +177,11 @@ export default function TripCard({ trip, onFavorite, isFavorited = false }: Trip
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-            <div className="text-sm text-gray-600">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 border-t border-gray-100 gap-2">
+            <div className="text-sm text-gray-600 text-center sm:text-left">
               Starting from <span className="font-semibold text-gray-900">{formatPrice(trip.basePrice)}</span>
             </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md transition-colors duration-200">
+            <button className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium px-4 py-3 rounded-md transition-colors duration-200 touch-manipulation">
               View Details
             </button>
           </div>

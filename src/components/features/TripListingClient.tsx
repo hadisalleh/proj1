@@ -9,8 +9,11 @@ import TripListView from './TripListView';
 import SortDropdown from './SortDropdown';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import EmptyState from '@/components/ui/EmptyState';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import { SearchFilters, Trip } from '@/types';
 import { TripSearchResult } from '@/lib/services/tripService';
+import { cachedFetch, cacheKeys } from '@/utils/cache';
+import { measureAsync } from '@/utils/performance';
 
 interface SearchResponse {
   success: boolean;
@@ -95,7 +98,7 @@ export default function TripListingClient() {
     return url.toString();
   }, [location, startDate, endDate, guests, filters, currentPage, sortBy, sortOrder]);
 
-  // Fetch trips from API
+  // Fetch trips from API with caching and performance monitoring
   const fetchTrips = useCallback(async (page: number = 1, append: boolean = false) => {
     try {
       if (!append) {
@@ -106,13 +109,21 @@ export default function TripListingClient() {
       setError(null);
 
       const url = buildSearchUrl({ page });
-      const response = await fetch(url);
+      const cacheKey = cacheKeys.trips({ url, page });
       
-      if (!response.ok) {
-        throw new Error('Failed to fetch trips');
-      }
-
-      const data: SearchResponse = await response.json();
+      const data: SearchResponse = await measureAsync('fetch-trips', () =>
+        cachedFetch(
+          cacheKey,
+          async () => {
+            const response = await fetch(url);
+            if (!response.ok) {
+              throw new Error('Failed to fetch trips');
+            }
+            return response.json();
+          },
+          2 * 60 * 1000 // Cache for 2 minutes
+        )
+      );
       
       if (data.success) {
         if (append) {
@@ -236,16 +247,16 @@ export default function TripListingClient() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 py-4 lg:px-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="bg-white border-b border-gray-200 px-4 py-4 lg:px-6 sticky top-16 z-40">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center space-x-4 order-2 sm:order-1">
               {/* Mobile filter toggle */}
               <button
                 onClick={() => setIsFilterOpen(true)}
-                className="lg:hidden flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="lg:hidden flex items-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 touch-manipulation"
               >
-                <Filter className="h-4 w-4" />
-                <span className="text-sm font-medium">Filters</span>
+                <Filter className="h-5 w-5" />
+                <span className="text-base font-medium">Filters</span>
               </button>
 
               {/* Results count */}
@@ -265,7 +276,7 @@ export default function TripListingClient() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between sm:justify-start space-x-4 order-1 sm:order-2">
               {/* Sort dropdown */}
               <SortDropdown
                 sortBy={sortBy}
@@ -274,10 +285,10 @@ export default function TripListingClient() {
               />
 
               {/* View mode toggle */}
-              <div className="hidden sm:flex items-center border border-gray-300 rounded-md">
+              <div className="flex items-center border border-gray-300 rounded-md">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 ${
+                  className={`p-2 touch-manipulation ${
                     viewMode === 'grid'
                       ? 'bg-blue-50 text-blue-600'
                       : 'text-gray-400 hover:text-gray-600'
@@ -288,7 +299,7 @@ export default function TripListingClient() {
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 ${
+                  className={`p-2 touch-manipulation ${
                     viewMode === 'list'
                       ? 'bg-blue-50 text-blue-600'
                       : 'text-gray-400 hover:text-gray-600'
@@ -303,45 +314,51 @@ export default function TripListingClient() {
         </div>
 
         {/* Trip Results */}
-        <div className="flex-1 p-4 lg:p-6">
-          {trips.length === 0 ? (
-            <EmptyState
-              title="No trips found"
-              description="Try adjusting your search criteria or filters to find more trips."
-              action={{
-                label: 'Clear filters',
-                onClick: () => handleFiltersChange({})
-              }}
-            />
-          ) : (
-            <>
-              {viewMode === 'grid' ? (
-                <TripGrid trips={trips} />
-              ) : (
-                <TripListView trips={trips} />
-              )}
+        <PullToRefresh
+          onRefresh={() => fetchTrips(1, false)}
+          className="flex-1"
+          enabled={trips.length > 0}
+        >
+          <div className="p-4 lg:p-6">
+            {trips.length === 0 ? (
+              <EmptyState
+                title="No trips found"
+                description="Try adjusting your search criteria or filters to find more trips."
+                action={{
+                  label: 'Clear filters',
+                  onClick: () => handleFiltersChange({})
+                }}
+              />
+            ) : (
+              <>
+                {viewMode === 'grid' ? (
+                  <TripGrid trips={trips} />
+                ) : (
+                  <TripListView trips={trips} />
+                )}
 
-              {/* Loading more indicator */}
-              {loadingMore && (
-                <div className="flex justify-center py-8">
-                  <LoadingSpinner />
-                </div>
-              )}
+                {/* Loading more indicator */}
+                {loadingMore && (
+                  <div className="flex justify-center py-8">
+                    <LoadingSpinner />
+                  </div>
+                )}
 
-              {/* Load more button (fallback for infinite scroll) */}
-              {currentPage < totalPages && !loadingMore && (
-                <div className="flex justify-center py-8">
-                  <button
-                    onClick={loadMoreTrips}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                  >
-                    Load More Trips
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+                {/* Load more button (fallback for infinite scroll) */}
+                {currentPage < totalPages && !loadingMore && (
+                  <div className="flex justify-center py-8">
+                    <button
+                      onClick={loadMoreTrips}
+                      className="px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors touch-manipulation"
+                    >
+                      Load More Trips
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </PullToRefresh>
       </div>
     </div>
   );

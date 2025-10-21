@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X, Grid3X3 } from 'lucide-react';
+import { useSwipeableElement } from '@/hooks/useSwipeGesture';
 
 interface TripImageGalleryProps {
   images: string[];
@@ -39,6 +40,20 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
     setModalImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  // Swipe gestures for modal
+  const modalRef = useSwipeableElement({
+    onSwipeLeft: nextModalImage,
+    onSwipeRight: prevModalImage,
+    threshold: 50
+  });
+
+  // Swipe gestures for main gallery
+  const galleryRef = useSwipeableElement({
+    onSwipeLeft: nextImage,
+    onSwipeRight: prevImage,
+    threshold: 50
+  });
+
   if (!images || images.length === 0) {
     return (
       <div className="relative h-96 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
@@ -50,15 +65,15 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
   return (
     <>
       {/* Main Gallery */}
-      <div className="relative">
+      <div ref={galleryRef} className="relative touch-manipulation">
         {images.length === 1 ? (
           // Single image layout
-          <div className="relative h-96 md:h-[500px]">
+          <div className="relative h-64 sm:h-80 md:h-[500px]">
             <Image
               src={images[0]}
               alt={title}
               fill
-              className="object-cover cursor-pointer"
+              className="object-cover cursor-pointer rounded-lg"
               onClick={() => openModal(0)}
               sizes="100vw"
               priority
@@ -66,7 +81,7 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
           </div>
         ) : (
           // Multiple images layout
-          <div className="grid grid-cols-4 gap-2 h-96 md:h-[500px]">
+          <div className="grid grid-cols-4 gap-1 sm:gap-2 h-64 sm:h-80 md:h-[500px]">
             {/* Main large image */}
             <div className="col-span-2 row-span-2 relative">
               <Image
@@ -118,24 +133,24 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
           <>
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all duration-200"
+              className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 sm:p-3 shadow-lg transition-all duration-200 touch-manipulation"
               aria-label="Previous image"
             >
-              <ChevronLeft className="h-6 w-6 text-gray-800" />
+              <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 text-gray-800" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all duration-200"
+              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 sm:p-3 shadow-lg transition-all duration-200 touch-manipulation"
               aria-label="Next image"
             >
-              <ChevronRight className="h-6 w-6 text-gray-800" />
+              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 text-gray-800" />
             </button>
           </>
         )}
 
         {/* Image counter */}
         {images.length > 1 && (
-          <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+          <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black bg-opacity-50 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
             {currentImageIndex + 1} / {images.length}
           </div>
         )}
@@ -143,24 +158,25 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
         {/* View all photos button */}
         <button
           onClick={() => openModal(0)}
-          className="absolute bottom-4 left-4 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center"
+          className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center text-sm sm:text-base touch-manipulation"
         >
-          <Grid3X3 className="h-4 w-4 mr-2" />
-          View all photos
+          <Grid3X3 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">View all photos</span>
+          <span className="sm:hidden">Photos</span>
         </button>
       </div>
 
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <div className="relative w-full h-full flex items-center justify-center p-4">
+          <div ref={modalRef} className="relative w-full h-full flex items-center justify-center p-2 sm:p-4 touch-manipulation">
             {/* Close button */}
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+              className="absolute top-2 sm:top-4 right-2 sm:right-4 text-white hover:text-gray-300 z-10 p-2 touch-manipulation"
               aria-label="Close gallery"
             >
-              <X className="h-8 w-8" />
+              <X className="h-6 w-6 sm:h-8 sm:w-8" />
             </button>
 
             {/* Navigation arrows */}
@@ -168,17 +184,17 @@ export default function TripImageGallery({ images, title }: TripImageGalleryProp
               <>
                 <button
                   onClick={prevModalImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
+                  className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10 p-2 touch-manipulation"
                   aria-label="Previous image"
                 >
-                  <ChevronLeft className="h-12 w-12" />
+                  <ChevronLeft className="h-8 w-8 sm:h-12 sm:w-12" />
                 </button>
                 <button
                   onClick={nextModalImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10"
+                  className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10 p-2 touch-manipulation"
                   aria-label="Next image"
                 >
-                  <ChevronRight className="h-12 w-12" />
+                  <ChevronRight className="h-8 w-8 sm:h-12 sm:w-12" />
                 </button>
               </>
             )}
