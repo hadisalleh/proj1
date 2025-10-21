@@ -81,8 +81,195 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Popular Destinations */}
+      {/* Featured Trips */}
       <section className="py-16 sm:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Featured Fishing Trips
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Handpicked adventures from our most popular and highly-rated fishing experiences.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
+            {/* Trip 1 */}
+            <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 overflow-hidden">
+              <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center relative">
+                <div className="text-white text-6xl">🌊</div>
+                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1">
+                  <span className="text-sm font-semibold text-gray-900">$299</span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Deep Sea Fishing Adventure</h3>
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>Marina Bay</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>8 hours</span>
+                  <Users className="h-4 w-4 ml-4 mr-1" />
+                  <span>Up to 6 guests</span>
+                </div>
+                <div className="flex items-center mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="ml-2 text-sm font-medium text-gray-900">5.0</span>
+                  <span className="ml-1 text-sm text-gray-600">(24 reviews)</span>
+                </div>
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1">
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                      Sport Fishing Boat
+                    </span>
+                    <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                      Deep Sea
+                    </span>
+                    <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                      Trolling
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 border-t border-gray-100 gap-2">
+                  <div className="text-sm text-gray-600 text-center sm:text-left">
+                    Starting from <span className="font-semibold text-gray-900">$299</span>
+                  </div>
+                  <Link
+                    href="/trips"
+                    className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium px-4 py-3 rounded-md transition-colors duration-200 touch-manipulation text-center"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Trip 2 */}
+            <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 overflow-hidden">
+              <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center relative">
+                <div className="text-white text-6xl">🌅</div>
+                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1">
+                  <span className="text-sm font-semibold text-gray-900">$189</span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Sunset Fishing Charter</h3>
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>Sunset Harbor</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>4 hours</span>
+                  <Users className="h-4 w-4 ml-4 mr-1" />
+                  <span>Up to 8 guests</span>
+                </div>
+                <div className="flex items-center mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`h-4 w-4 ${i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                  ))}
+                  <span className="ml-2 text-sm font-medium text-gray-900">4.8</span>
+                  <span className="ml-1 text-sm text-gray-600">(18 reviews)</span>
+                </div>
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1">
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                      Pontoon Boat
+                    </span>
+                    <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                      Inshore
+                    </span>
+                    <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                      Light Tackle
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 border-t border-gray-100 gap-2">
+                  <div className="text-sm text-gray-600 text-center sm:text-left">
+                    Starting from <span className="font-semibold text-gray-900">$189</span>
+                  </div>
+                  <Link
+                    href="/trips"
+                    className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium px-4 py-3 rounded-md transition-colors duration-200 touch-manipulation text-center"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Trip 3 */}
+            <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 overflow-hidden">
+              <div className="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center relative">
+                <div className="text-white text-6xl">🐠</div>
+                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1">
+                  <span className="text-sm font-semibold text-gray-900">$149</span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Half Day Reef Fishing</h3>
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>Coral Reef Marina</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600 mb-3">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>4 hours</span>
+                  <Users className="h-4 w-4 ml-4 mr-1" />
+                  <span>Up to 4 guests</span>
+                </div>
+                <div className="flex items-center mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="ml-2 text-sm font-medium text-gray-900">4.9</span>
+                  <span className="ml-1 text-sm text-gray-600">(31 reviews)</span>
+                </div>
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-1">
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                      Center Console
+                    </span>
+                    <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                      Reef Fishing
+                    </span>
+                    <span className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                      Bottom Fishing
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 border-t border-gray-100 gap-2">
+                  <div className="text-sm text-gray-600 text-center sm:text-left">
+                    Starting from <span className="font-semibold text-gray-900">$149</span>
+                  </div>
+                  <Link
+                    href="/trips"
+                    className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium px-4 py-3 rounded-md transition-colors duration-200 touch-manipulation text-center"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/trips"
+              className="inline-flex items-center px-6 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors touch-manipulation"
+            >
+              View All Trips
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Destinations */}
+      <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
